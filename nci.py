@@ -10,7 +10,6 @@ available data for each trial (via NCI API)
 
 import json
 import urllib2
-import pprint
 
 def main(): 
     disease = 'Metastatic Breast Cancer'
@@ -61,6 +60,7 @@ def print_to_file(disease, candle_trials):
     """
 
     with open('%s.txt' % disease, 'wt') as out:
+        out.write("I/E Criteria for %s\n\n" % disease)
         for candle_trial in candle_trials:
             out.write("Title: %s\n" % candle_trial['title'])
             out.write("NCI ID: %s\n" % candle_trial['nci_id'])
@@ -69,20 +69,20 @@ def print_to_file(disease, candle_trials):
             structured_criteria_text= ""
             for key, val in candle_trial['structured_criteria'].iteritems():
                 structured_criteria_text += "\t%s: %s\n" %(key, val)
-            out.write("Structured Criteria: \n%s\n" % structured_criteria_text)
+            out.write("Structured Criteria: \n%s" % structured_criteria_text)
 
             out.write("Inclusion Criteria: \n")
             for inclusion_criteria in candle_trial['inclusion_criteria']:
-                #import ipdb;ipdb.set_trace()
                 out.write("\t%s\n" % inclusion_criteria.encode('utf-8'))
 
-            """
             out.write("Exclusion Criteria: \n")
+            if not candle_trial['exclusion_criteria']:
+                out.write("\tNONE\n")
+                next
             for exclusion_criteria in candle_trial['exclusion_criteria']:
-                out.write("\t%s\n" % exclusion_criteria)
-            """
+                out.write("\t%s\n" % exclusion_criteria.encode('utf-8'))
 
-            out.write("\n\n")
+            out.write("-----------------------------------\n\n")
 
 def usage():
 
